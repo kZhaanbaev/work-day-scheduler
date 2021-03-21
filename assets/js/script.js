@@ -1,4 +1,5 @@
 const table_el = $('table');
+const currentDay = $('#currentDay');
 
 displayTimeTable();
 
@@ -19,6 +20,9 @@ buttonSave.on('click', function(event){
 
 function displayTimeTable(){
     let currentTime = moment().format('LT');
+    let displayTime = moment().format('dddd, MMMM Do');
+    
+    currentDay.text(displayTime);
 
     for(i = 9; i < 18; i++){
         let tr = $('<tr>');
