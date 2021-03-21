@@ -1,32 +1,53 @@
 const table_el = $('table');
 
-
 displayTimeTable();
+
+const buttonSave = $('button');
+
+buttonSave.on('click', function(event){
+    let time = $(this).closest('tr').children().first();
+
+    let textarea = $(this).parent().prev().children();
+    
+    if(textarea.val()){
+        localStorage.setItem(time.html(), textarea.val());
+    }else{
+        localStorage.setItem(time.html(), '');
+    }
+})
 
 
 function displayTimeTable(){
-    let currentTime = '2:34 PM';
-    // moment().format('LT');
+    let currentTime = moment().format('LT');
 
     for(i = 9; i < 18; i++){
         let tr = $('<tr>');
         let tdTime = $('<td class="td-time">');
         let am_pm;
+        let time;
 
+        //setting AM or PM based on hour of the day
         if(i < 13){
             am_pm = 'AM';
+            time = `${i} ${am_pm}`;
+            tdTime.text(time);
         }else{
             am_pm = 'PM';
+            time = `${i-12} ${am_pm}`
+            tdTime.text(time);
         }
-
-        tdTime.text(`${i} ${am_pm}`);
 
         let tdTextarea = $('<td class="td-text">');
         let textarea = $('<textarea>');
+
+        //setting value of textarea from local storage, if exists
+        if(localStorage.getItem(time)){
+            textarea.text(localStorage.getItem(time));
+        }
+
         tdTextarea.append(textarea);
 
-        // background-color: var(--color-light-green);
-
+        //based on current time setting a background color to text area
         if(am_pm === 'AM'){
             if(currentTime.substr(currentTime.length - 2) === 'AM'){
                 if(i < currentTime.substr(0,currentTime.indexOf(':'))){
@@ -64,3 +85,4 @@ function displayTimeTable(){
         table_el.append(tr);
     }
 }
+
